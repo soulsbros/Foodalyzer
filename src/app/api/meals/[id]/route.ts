@@ -4,11 +4,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
-    const meal = await Meal.findById(params.id).populate({
+    const { id } = await params;
+    const meal = await Meal.findById(id).populate({
       path: "dishes.dishId",
       populate: {
         path: "ingredients.ingredientId",
@@ -31,14 +32,15 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
+    const { id } = await params;
     const { mealType, dishes } = await request.json();
 
     const meal = await Meal.findByIdAndUpdate(
-      params.id,
+      id,
       { mealType, dishes },
       { new: true }
     ).populate({
@@ -64,11 +66,12 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
-    const meal = await Meal.findByIdAndDelete(params.id);
+    const { id } = await params;
+    const meal = await Meal.findByIdAndDelete(id);
 
     if (!meal) {
       return NextResponse.json({ error: "Meal not found" }, { status: 404 });

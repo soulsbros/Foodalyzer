@@ -25,10 +25,12 @@ export interface MealDish {
   dishId: Dish | string;
 }
 
+export type MealType = "breakfast" | "lunch" | "dinner" | "snack";
+
 export interface Meal {
   _id: string;
   date: string;
-  mealType: "breakfast" | "lunch" | "dinner" | "snack";
+  mealType: MealType;
   dishes: MealDish[];
   createdAt?: string;
   updatedAt?: string;

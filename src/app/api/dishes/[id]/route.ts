@@ -4,13 +4,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
-    const dish = await Dish.findById(params.id).populate(
-      "ingredients.ingredientId"
-    );
+    const { id } = await params;
+    const dish = await Dish.findById(id).populate("ingredients.ingredientId");
 
     if (!dish) {
       return NextResponse.json({ error: "Dish not found" }, { status: 404 });
@@ -28,14 +27,15 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
+    const { id } = await params;
     const { name, ingredients } = await request.json();
 
     const dish = await Dish.findByIdAndUpdate(
-      params.id,
+      id,
       { name, ingredients },
       { new: true }
     ).populate("ingredients.ingredientId");
@@ -56,11 +56,12 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
-    const dish = await Dish.findByIdAndDelete(params.id);
+    const { id } = await params;
+    const dish = await Dish.findByIdAndDelete(id);
 
     if (!dish) {
       return NextResponse.json({ error: "Dish not found" }, { status: 404 });

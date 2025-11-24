@@ -4,11 +4,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
-    const ingredient = await Ingredient.findById(params.id);
+    const { id } = await params;
+    const ingredient = await Ingredient.findById(id);
 
     if (!ingredient) {
       return NextResponse.json(
@@ -29,14 +30,15 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
+    const { id } = await params;
     const { name, calories, category, description } = await request.json();
 
     const ingredient = await Ingredient.findByIdAndUpdate(
-      params.id,
+      id,
       { name, calories, category, description },
       { new: true }
     );
@@ -60,11 +62,12 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
-    const ingredient = await Ingredient.findByIdAndDelete(params.id);
+    const { id } = await params;
+    const ingredient = await Ingredient.findByIdAndDelete(id);
 
     if (!ingredient) {
       return NextResponse.json(
