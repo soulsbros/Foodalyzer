@@ -141,7 +141,7 @@ export default function PantryPage() {
                   required
                 />
                 <Input
-                  label="Calories (per 100g)"
+                  label="Calories (kcal/100g)"
                   type="number"
                   placeholder="0"
                   value={formData.calories}
@@ -171,9 +171,6 @@ export default function PantryPage() {
                   }
                 />
                 <div className="md:col-span-2 flex gap-4">
-                  <Button type="submit" className="flex-1">
-                    {editingId ? "Update Ingredient" : "Add Ingredient"}
-                  </Button>
                   <Button
                     type="button"
                     variant="secondary"
@@ -190,6 +187,9 @@ export default function PantryPage() {
                     }}
                   >
                     Cancel
+                  </Button>
+                  <Button type="submit" className="flex-1">
+                    {editingId ? "Update Ingredient" : "Add Ingredient"}
                   </Button>
                 </div>
               </form>
@@ -223,7 +223,7 @@ export default function PantryPage() {
                     </h3>
                     <div className="flex flex-wrap gap-4 text-sm text-slate-400">
                       <span>📁 {ingredient.category}</span>
-                      <span>🔥 {ingredient.calories} cal/100g</span>
+                      <span>🔥 {ingredient.calories} kcal/100g</span>
                       {ingredient.description && (
                         <span>📝 {ingredient.description}</span>
                       )}

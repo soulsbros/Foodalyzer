@@ -7,9 +7,8 @@ export function Navigation() {
   const pathname = usePathname();
 
   const links = [
-    { href: "/", label: "Home" },
-    { href: "/pantry", label: "The Pantry" },
-    { href: "/table", label: "The Table" },
+    { href: "/pantry", label: "Pantry" },
+    { href: "/table", label: "Table" },
     { href: "/diary", label: "Diary" },
   ];
 
@@ -18,7 +17,7 @@ export function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0 font-bold text-xl text-emerald-400">
-            Foodalyzer
+            <Link href="/">Foodalyzer</Link>
           </div>
           <div className="flex space-x-1">
             {links.map(({ href, label }) => (

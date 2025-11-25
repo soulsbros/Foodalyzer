@@ -208,7 +208,7 @@ export default function TablePage() {
                         label="Ingredient"
                         options={ingredients.map((ing) => ({
                           value: ing._id,
-                          label: `${ing.name} (${ing.calories} cal/100g)`,
+                          label: `${ing.name} (${ing.calories} kcal/100g)`,
                         }))}
                         value={entry.ingredientId}
                         onChange={(value) =>
@@ -225,7 +225,7 @@ export default function TablePage() {
                       />
                       <div className="flex flex-col gap-2">
                         <label className="text-sm font-medium text-slate-300">
-                          Calories/100g
+                          kcal/100g
                         </label>
                         <div className="px-3 py-2 rounded-lg bg-slate-600 text-slate-300">
                           {entry.caloriePer100g}
@@ -264,7 +264,7 @@ export default function TablePage() {
                       <div className="text-right">
                         <p className="text-slate-300">Meal Total:</p>
                         <p className="text-3xl font-bold text-emerald-400">
-                          {totalCalories.toFixed(1)} cal
+                          {totalCalories.toFixed(1)} kcal
                         </p>
                       </div>
                     </div>
@@ -283,7 +283,7 @@ export default function TablePage() {
           {/* Today's Meals */}
           <div>
             <h2 className="text-2xl font-bold text-emerald-400 mb-4">
-              Meals for {new Date(date).toLocaleDateString()}
+              Meals list
             </h2>
             {meals.length === 0 ? (
               <div className="bg-slate-800 rounded-lg p-8 border border-slate-700 text-center">
@@ -317,14 +317,11 @@ export default function TablePage() {
                           <h3 className="text-lg font-semibold text-emerald-400 capitalize">
                             {meal.mealType}
                           </h3>
-                          <p className="text-sm text-slate-400">
-                            {new Date(meal.date).toLocaleTimeString()}
-                          </p>
                         </div>
                         <div className="text-right">
                           <p className="text-sm text-slate-400">Total:</p>
                           <p className="text-2xl font-bold text-emerald-400">
-                            {mealCalories.toFixed(1)} cal
+                            {mealCalories.toFixed(1)} kcal
                           </p>
                         </div>
                       </div>
@@ -334,21 +331,18 @@ export default function TablePage() {
                           const dishData = dish.dishId as unknown as Dish;
                           return (
                             <div key={idx} className="text-sm text-slate-300">
-                              <p className="font-medium">{dishData.name}</p>
-                              <ul className="ml-4 text-slate-400">
-                                {dishData.ingredients.map((ing, ingIdx) => {
-                                  const ingredient =
-                                    ing.ingredientId as unknown as Ingredient;
-                                  const calories =
-                                    (ingredient.calories * ing.weight) / 100;
-                                  return (
-                                    <li key={ingIdx}>
-                                      {ingredient.name}: {ing.weight}g (
-                                      {calories.toFixed(1)} cal)
-                                    </li>
-                                  );
-                                })}
-                              </ul>
+                              {dishData.ingredients.map((ing, ingIdx) => {
+                                const ingredient =
+                                  ing.ingredientId as unknown as Ingredient;
+                                const calories =
+                                  (ingredient.calories * ing.weight) / 100;
+                                return (
+                                  <p key={ingIdx}>
+                                    {ingredient.name}: {ing.weight}g (
+                                    {calories.toFixed(1)} kcal)
+                                  </p>
+                                );
+                              })}
                             </div>
                           );
                         })}

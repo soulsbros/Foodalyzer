@@ -142,7 +142,7 @@ export default function DiaryPage() {
                   <p className="text-5xl font-bold text-emerald-400">
                     {totalCalories.toFixed(1)}
                   </p>
-                  <p className="text-sm text-slate-400 mt-2">cal</p>
+                  <p className="text-sm text-slate-400 mt-2">kcal</p>
                 </div>
               </div>
 
@@ -290,13 +290,13 @@ export default function DiaryPage() {
                             {meal.mealType}
                           </h3>
                           <p className="text-sm text-slate-400">
-                            {new Date(meal.date).toLocaleString()}
+                            {new Date(meal.date).toLocaleDateString()}
                           </p>
                         </div>
                         <div className="text-right">
                           <p className="text-sm text-slate-400">Total:</p>
                           <p className="text-2xl font-bold text-emerald-400">
-                            {mealCalories.toFixed(1)} cal
+                            {mealCalories.toFixed(1)} kcal
                           </p>
                         </div>
                       </div>
@@ -306,9 +306,6 @@ export default function DiaryPage() {
                           const dishData = dish.dishId as unknown as Dish;
                           return (
                             <div key={idx} className="bg-slate-700 rounded p-4">
-                              <p className="font-medium text-slate-200 mb-2">
-                                {dishData.name}
-                              </p>
                               <div className="grid gap-2 text-sm">
                                 {dishData.ingredients.map((ing, ingIdx) => {
                                   const ingredient =
@@ -325,7 +322,7 @@ export default function DiaryPage() {
                                         ) · {ing.weight}g
                                       </span>
                                       <span className="font-semibold text-emerald-400">
-                                        {calories.toFixed(1)} cal
+                                        {calories.toFixed(1)} kcal
                                       </span>
                                     </div>
                                   );
