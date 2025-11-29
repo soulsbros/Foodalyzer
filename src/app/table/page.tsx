@@ -1,11 +1,13 @@
 "use client";
 
+import { createDish } from "@/actions/dishes";
+import { getIngredients } from "@/actions/ingredients";
+import { createMeal, deleteMeal, getMealsByDate } from "@/actions/meals";
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
 import { Navigation } from "@/components/Navigation";
 import { Select } from "@/components/Select";
-import { Dish, Ingredient, Meal } from "@/types";
-import axios from "axios";
+import { Dish, Ingredient, Meal, MealType } from "@/types";
 import { useEffect, useState } from "react";
 
 interface DishEntry {
@@ -41,8 +43,8 @@ export default function TablePage() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("/api/ingredients");
-      setIngredients(response.data);
+      const data = await getIngredients();
+      setIngredients(data);
     } catch (error) {
       console.error("Failed to fetch ingredients:", error);
     } finally {
@@ -52,10 +54,8 @@ export default function TablePage() {
 
   const fetchMealsForDate = async () => {
     try {
-      const response = await axios.get("/api/meals", {
-        params: { date },
-      });
-      setMeals(response.data);
+      const data = await getMealsByDate(date);
+      setMeals(data);
     } catch (error) {
       console.error("Failed to fetch meals:", error);
     }
@@ -110,7 +110,7 @@ export default function TablePage() {
     try {
       // First, create dishes for each ingredient in the meal
       const dishPromises = dishEntries.map((entry) =>
-        axios.post("/api/dishes", {
+        createDish({
           name: `${date} - ${mealType}`,
           ingredients: [
             {
@@ -121,15 +121,15 @@ export default function TablePage() {
         })
       );
 
-      const dishResponses = await Promise.all(dishPromises);
-      const dishIds = dishResponses.map((res) => ({
-        dishId: res.data._id,
+      const dishes = await Promise.all(dishPromises);
+      const dishIds = dishes.map((dish) => ({
+        dishId: dish._id,
       }));
 
       // Then create the meal
-      await axios.post("/api/meals", {
+      await createMeal({
         date,
-        mealType,
+        mealType: mealType as MealType,
         dishes: dishIds,
       });
 
@@ -146,7 +146,7 @@ export default function TablePage() {
     if (!window.confirm("Are you sure you want to delete this meal?")) return;
 
     try {
-      await axios.delete(`/api/meals/${mealId}`);
+      await deleteMeal(mealId);
       await fetchMealsForDate();
     } catch (error) {
       console.error("Failed to delete meal:", error);

@@ -1,11 +1,16 @@
 "use client";
 
+import {
+  createIngredient,
+  deleteIngredient,
+  getIngredients,
+  updateIngredient,
+} from "@/actions/ingredients";
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
 import { Navigation } from "@/components/Navigation";
 import { Select } from "@/components/Select";
 import { Ingredient } from "@/types";
-import axios from "axios";
 import { useEffect, useState } from "react";
 
 export default function PantryPage() {
@@ -41,8 +46,8 @@ export default function PantryPage() {
   const fetchIngredients = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("/api/ingredients");
-      setIngredients(response.data);
+      const data = await getIngredients();
+      setIngredients(data);
     } catch (error) {
       console.error("Failed to fetch ingredients:", error);
     } finally {
@@ -60,9 +65,9 @@ export default function PantryPage() {
 
     try {
       if (editingId) {
-        await axios.put(`/api/ingredients/${editingId}`, formData);
+        await updateIngredient(editingId, formData);
       } else {
-        await axios.post("/api/ingredients", formData);
+        await createIngredient(formData);
       }
       setFormData({ name: "", calories: 0, category: "", description: "" });
       setEditingId(null);
@@ -90,7 +95,7 @@ export default function PantryPage() {
       return;
 
     try {
-      await axios.delete(`/api/ingredients/${id}`);
+      await deleteIngredient(id);
       await fetchIngredients();
     } catch (error) {
       console.error("Failed to delete ingredient:", error);

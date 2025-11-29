@@ -1,9 +1,9 @@
 "use client";
 
+import { getMealsByDate } from "@/actions/meals";
 import { Input } from "@/components/Input";
 import { Navigation } from "@/components/Navigation";
 import { Dish, Ingredient, Meal } from "@/types";
-import axios from "axios";
 import { useEffect, useState } from "react";
 
 interface CalorieBreakdown {
@@ -28,10 +28,8 @@ export default function DiaryPage() {
   const fetchMeals = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("/api/meals", {
-        params: { date },
-      });
-      setMeals(response.data);
+      const data = await getMealsByDate(date);
+      setMeals(data);
     } catch (error) {
       console.error("Failed to fetch meals:", error);
     } finally {

@@ -25,7 +25,6 @@ async function connectDB() {
   if (!cached.promise) {
     cached.promise = mongoose.connect(URI!, {
       bufferCommands: false,
-      dbName: "foodalyzer",
     });
   }
 
