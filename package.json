@@ -9,7 +9,7 @@
     "lint": "eslint"
   },
   "engines": {
-    "node": "^25.0.0"
+    "node": "^25"
   },
   "dependencies": {
     "mongoose": "^8.0.0",
