@@ -4,6 +4,7 @@ export interface Ingredient {
   calories: number;
   category: string;
   description?: string;
+  servingSize?: number;
   createdAt?: string;
   updatedAt?: string;
 }

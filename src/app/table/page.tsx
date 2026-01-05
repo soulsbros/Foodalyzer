@@ -80,6 +80,8 @@ export default function TablePage() {
       if (ingredient) {
         entry.ingredientId = value as string;
         entry.caloriePer100g = ingredient.calories;
+        // Use the ingredient's serving size as the default weight
+        entry.weight = ingredient.servingSize || 100;
         entry.totalCalories = (entry.weight * ingredient.calories) / 100;
       }
     } else if (field === "weight") {

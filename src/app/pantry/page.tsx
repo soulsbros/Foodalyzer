@@ -23,6 +23,7 @@ export default function PantryPage() {
     calories: 0,
     category: "",
     description: "",
+    servingSize: 100,
   });
 
   const categories = [
@@ -62,13 +63,24 @@ export default function PantryPage() {
       return;
     }
 
+    if (!formData.servingSize || formData.servingSize <= 0) {
+      alert("Serving size must be greater than 0");
+      return;
+    }
+
     try {
       if (editingId) {
         await updateIngredient(editingId, formData);
       } else {
         await createIngredient(formData);
       }
-      setFormData({ name: "", calories: 0, category: "", description: "" });
+      setFormData({
+        name: "",
+        calories: 0,
+        category: "",
+        description: "",
+        servingSize: 100,
+      });
       setEditingId(null);
       setShowForm(false);
       await fetchIngredients();
@@ -84,6 +96,7 @@ export default function PantryPage() {
       calories: ingredient.calories,
       category: ingredient.category,
       description: ingredient.description || "",
+      servingSize: ingredient.servingSize || 100,
     });
     setEditingId(ingredient._id);
     setShowForm(true);
@@ -115,6 +128,7 @@ export default function PantryPage() {
               calories: 0,
               category: "",
               description: "",
+              servingSize: 100,
             });
           }}
         >
@@ -161,6 +175,16 @@ export default function PantryPage() {
               required
             />
             <Input
+              label="Typical Serving Size (g)"
+              type="number"
+              placeholder="e.g., 100"
+              value={formData.servingSize}
+              onChange={(value) =>
+                setFormData({ ...formData, servingSize: value as number })
+              }
+              required
+            />
+            <Input
               label="Description (optional)"
               placeholder="e.g., skinless, grilled"
               value={formData.description}
@@ -181,6 +205,7 @@ export default function PantryPage() {
                     calories: 0,
                     category: "",
                     description: "",
+                    servingSize: 100,
                   });
                 }}
               >
@@ -222,10 +247,18 @@ export default function PantryPage() {
                 <div className="flex flex-wrap gap-4 text-sm text-slate-400">
                   <span>📁 {ingredient.category}</span>
                   <span>🔥 {ingredient.calories} kcal/100g</span>
+                  <span>🥄 {ingredient.servingSize || 100}g serving</span>
                   {ingredient.description && (
                     <span>📝 {ingredient.description}</span>
                   )}
                 </div>
+                <p className="text-xs text-emerald-400 mt-2 font-semibold">
+                  {(
+                    (ingredient.calories * (ingredient.servingSize || 100)) /
+                    100
+                  ).toFixed(0)}{" "}
+                  kcal per serving
+                </p>
               </div>
               <div className="flex gap-2">
                 <Button

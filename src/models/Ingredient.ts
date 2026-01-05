@@ -21,6 +21,11 @@ const ingredientSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    servingSize: {
+      type: Number,
+      default: 100,
+      min: 0.1,
+    },
   },
   { timestamps: true }
 );

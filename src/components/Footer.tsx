@@ -19,7 +19,7 @@ export function Footer() {
         <div className="flex items-center gap-4 justify-center">
           <div className="text-sm">
             <p className="font-medium">
-              Logeed in as {session.user.nickname || session.user.firstName}
+              Logged in as {session.user.nickname || session.user.firstName}
             </p>
           </div>
           <Button
