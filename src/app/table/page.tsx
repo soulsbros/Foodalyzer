@@ -7,6 +7,7 @@ import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
 import { Select } from "@/components/Select";
 import { Dish, Ingredient, Meal, MealType } from "@/types";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 interface DishEntry {
@@ -17,8 +18,11 @@ interface DishEntry {
 }
 
 export default function TablePage() {
+  const session = useSession();
+
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [mealType, setMealType] = useState("lunch");
+  const [isShared, setIsShared] = useState(false);
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
   const [meals, setMeals] = useState<Meal[]>([]);
   const [dishEntries, setDishEntries] = useState<DishEntry[]>([]);
@@ -132,10 +136,13 @@ export default function TablePage() {
         date,
         mealType: mealType as MealType,
         dishes: dishIds,
+        isShared,
+        createdBy: session.data?.user.email ?? "",
       });
 
       // Reset form
       setDishEntries([]);
+      setIsShared(false);
       await fetchMealsForDate();
     } catch (error) {
       console.error("Failed to save meal:", error);
@@ -179,6 +186,33 @@ export default function TablePage() {
             value={mealType}
             onChange={(value) => setMealType(value as string)}
           />
+        </div>
+
+        {/* Meal Sharing Selection */}
+        <div className="mb-6 p-6 bg-slate-700 rounded-lg">
+          <h3 className="text-lg font-semibold text-emerald-400 mb-4">
+            Is this a shared meal?
+          </h3>
+          <div className="flex gap-6">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                checked={!isShared}
+                onChange={() => setIsShared(false)}
+                className="w-4 h-4"
+              />
+              <span className="text-slate-300">Individual (only for me)</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                checked={isShared}
+                onChange={() => setIsShared(true)}
+                className="w-4 h-4"
+              />
+              <span className="text-slate-300">Shared (all users)</span>
+            </label>
+          </div>
         </div>
 
         {/* Ingredient Entry */}
@@ -304,6 +338,11 @@ export default function TablePage() {
                       <h3 className="text-lg font-semibold text-emerald-400 capitalize">
                         {meal.mealType}
                       </h3>
+                      <p className="text-xs text-slate-500 mt-1">
+                        {meal.isShared
+                          ? "🤝 Shared meal"
+                          : "👤 Individual meal"}
+                      </p>
                     </div>
                     <div className="text-right">
                       <p className="text-sm text-slate-400">Total:</p>

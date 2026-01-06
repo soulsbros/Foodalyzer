@@ -33,6 +33,8 @@ export interface Meal {
   date: string;
   mealType: MealType;
   dishes: MealDish[];
+  isShared: boolean;
+  createdBy: string;
   createdAt?: string;
   updatedAt?: string;
 }

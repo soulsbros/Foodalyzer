@@ -1,25 +1,36 @@
 "use server";
 
+import { authOptions } from "@/lib/auth";
 import connectDB from "@/lib/db";
 import { serialize } from "@/lib/utils";
 import Meal from "@/models/Meal";
 import { Meal as MealType } from "@/types";
+import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
 
 export async function getMealsByDate(date: string): Promise<MealType[]> {
   try {
     await connectDB();
 
+    const userData = await getServerSession(authOptions);
+    if (!userData?.user?.email) {
+      throw new Error("Not authenticated");
+    }
+
     const startOfDay = new Date(date);
     const endOfDay = new Date(date);
     endOfDay.setDate(endOfDay.getDate() + 1);
 
-    const meals = await Meal.find({
+    // Filter meals: shared meals or meals created by the user
+    const query = {
       date: {
         $gte: startOfDay,
         $lt: endOfDay,
       },
-    })
+      $or: [{ isShared: true }, { createdBy: userData?.user?.email }],
+    };
+
+    const meals = await Meal.find(query)
       .populate({
         path: "dishes.dishId",
         populate: {
@@ -41,6 +52,11 @@ export async function createMeal(
   try {
     await connectDB();
 
+    const userData = await getServerSession(authOptions);
+    if (!userData?.user?.email) {
+      throw new Error("Not authenticated");
+    }
+
     if (
       !data.date ||
       !data.mealType ||
@@ -54,6 +70,8 @@ export async function createMeal(
       date: new Date(data.date),
       mealType: data.mealType,
       dishes: data.dishes,
+      isShared: data.isShared ?? false,
+      createdBy: userData.user.email,
     });
 
     await meal.save();

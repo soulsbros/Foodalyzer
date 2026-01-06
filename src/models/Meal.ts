@@ -20,6 +20,15 @@ const mealSchema = new mongoose.Schema(
         },
       },
     ],
+    isShared: {
+      type: Boolean,
+      default: false,
+      required: true,
+    },
+    createdBy: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

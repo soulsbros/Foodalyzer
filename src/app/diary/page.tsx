@@ -275,6 +275,9 @@ export default function DiaryPage() {
                       <p className="text-sm text-slate-400">
                         {new Date(meal.date).toLocaleDateString()}
                       </p>
+                      <p className="text-xs text-slate-500 mt-1">
+                        {meal.isShared ? "🤝 Shared meal" : "👤 Your meal"}
+                      </p>
                     </div>
                     <div className="text-right">
                       <p className="text-sm text-slate-400">Total:</p>
