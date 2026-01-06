@@ -5,6 +5,7 @@ export interface Ingredient {
   category: string;
   description?: string;
   servingSize?: number;
+  store: string;
   createdAt?: string;
   updatedAt?: string;
 }

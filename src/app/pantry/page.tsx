@@ -12,32 +12,36 @@ import { Select } from "@/components/Select";
 import { Ingredient } from "@/types";
 import { useEffect, useState } from "react";
 
+const defaultState = {
+  name: "",
+  calories: 0,
+  category: "",
+  description: "",
+  servingSize: 100,
+  store: "Unknown",
+};
+
+const categories = [
+  "Beverages",
+  "Condiments",
+  "Dairy",
+  "Fruits",
+  "Grains",
+  "Proteins",
+  "Sauces",
+  "Snacks",
+  "Vegetables",
+  "Other",
+];
+
+const stores = ["Aldi", "Asia-market", "Coop", "Lidl", "Migros", "Unknown"];
+
 export default function PantryPage() {
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-
-  const [formData, setFormData] = useState({
-    name: "",
-    calories: 0,
-    category: "",
-    description: "",
-    servingSize: 100,
-  });
-
-  const categories = [
-    "Beverages",
-    "Condiments",
-    "Dairy",
-    "Fruits",
-    "Grains",
-    "Proteins",
-    "Sauces",
-    "Snacks",
-    "Vegetables",
-    "Other",
-  ];
+  const [formData, setFormData] = useState(defaultState);
 
   useEffect(() => {
     fetchIngredients();
@@ -74,13 +78,7 @@ export default function PantryPage() {
       } else {
         await createIngredient(formData);
       }
-      setFormData({
-        name: "",
-        calories: 0,
-        category: "",
-        description: "",
-        servingSize: 100,
-      });
+      setFormData(defaultState);
       setEditingId(null);
       setShowForm(false);
       await fetchIngredients();
@@ -97,6 +95,7 @@ export default function PantryPage() {
       category: ingredient.category,
       description: ingredient.description || "",
       servingSize: ingredient.servingSize || 100,
+      store: ingredient.store || "Unknown",
     });
     setEditingId(ingredient._id);
     setShowForm(true);
@@ -123,13 +122,7 @@ export default function PantryPage() {
           onClick={() => {
             setShowForm(!showForm);
             setEditingId(null);
-            setFormData({
-              name: "",
-              calories: 0,
-              category: "",
-              description: "",
-              servingSize: 100,
-            });
+            setFormData(defaultState);
           }}
         >
           {showForm ? "Cancel" : "Add Ingredient"}
@@ -184,6 +177,17 @@ export default function PantryPage() {
               }
               required
             />
+            <Select
+              label="Store"
+              options={stores.map((store) => ({
+                value: store,
+                label: store,
+              }))}
+              value={formData.store}
+              onChange={(value) =>
+                setFormData({ ...formData, store: value as string })
+              }
+            />
             <Input
               label="Description (optional)"
               placeholder="e.g., skinless, grilled"
@@ -200,13 +204,7 @@ export default function PantryPage() {
                 onClick={() => {
                   setShowForm(false);
                   setEditingId(null);
-                  setFormData({
-                    name: "",
-                    calories: 0,
-                    category: "",
-                    description: "",
-                    servingSize: 100,
-                  });
+                  setFormData(defaultState);
                 }}
               >
                 Cancel
@@ -248,6 +246,7 @@ export default function PantryPage() {
                   <span>📁 {ingredient.category}</span>
                   <span>🔥 {ingredient.calories} kcal/100g</span>
                   <span>🥄 {ingredient.servingSize || 100}g serving</span>
+                  <span>🏪 {ingredient.store || "Unknown"}</span>
                   {ingredient.description && (
                     <span>📝 {ingredient.description}</span>
                   )}

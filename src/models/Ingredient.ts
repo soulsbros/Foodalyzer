@@ -26,6 +26,11 @@ const ingredientSchema = new mongoose.Schema(
       default: 100,
       min: 0.1,
     },
+    store: {
+      type: String,
+      required: true,
+      default: "Unknown",
+    },
   },
   { timestamps: true }
 );

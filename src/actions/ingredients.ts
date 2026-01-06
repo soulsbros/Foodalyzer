@@ -27,12 +27,7 @@ export async function createIngredient(
       throw new Error("Missing required fields");
     }
 
-    const ingredient = new Ingredient({
-      name: data.name,
-      calories: data.calories,
-      category: data.category,
-      description: data.description || "",
-    });
+    const ingredient = new Ingredient(data);
 
     await ingredient.save();
     revalidatePath("/pantry");
