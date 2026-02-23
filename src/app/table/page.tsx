@@ -6,6 +6,7 @@ import { createMeal, deleteMeal, getMealsByDate } from "@/actions/meals";
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
 import { Select } from "@/components/Select";
+import { guessMealType } from "@/lib/utils";
 import { Dish, Ingredient, Meal, MealType } from "@/types";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -21,8 +22,8 @@ export default function TablePage() {
   const session = useSession();
 
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
-  const [mealType, setMealType] = useState("lunch");
-  const [isShared, setIsShared] = useState(false);
+  const [mealType, setMealType] = useState(guessMealType());
+  const [isShared, setIsShared] = useState(true);
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
   const [meals, setMeals] = useState<Meal[]>([]);
   const [dishEntries, setDishEntries] = useState<DishEntry[]>([]);
@@ -74,7 +75,7 @@ export default function TablePage() {
   const handleUpdateEntry = (
     index: number,
     field: string,
-    value: string | number
+    value: string | number,
   ) => {
     const newEntries = [...dishEntries];
     const entry = newEntries[index];
@@ -123,7 +124,7 @@ export default function TablePage() {
               weight: entry.weight,
             },
           ],
-        })
+        }),
       );
 
       const dishes = await Promise.all(dishPromises);
@@ -164,7 +165,7 @@ export default function TablePage() {
 
   const totalCalories = dishEntries.reduce(
     (sum, entry) => sum + entry.totalCalories,
-    0
+    0,
   );
 
   return (
