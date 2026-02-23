@@ -197,20 +197,20 @@ export default function TablePage() {
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="radio"
-                checked={!isShared}
-                onChange={() => setIsShared(false)}
-                className="w-4 h-4"
-              />
-              <span className="text-slate-300">Individual (only for me)</span>
-            </label>
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
                 checked={isShared}
                 onChange={() => setIsShared(true)}
                 className="w-4 h-4"
               />
               <span className="text-slate-300">Shared (all users)</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                checked={!isShared}
+                onChange={() => setIsShared(false)}
+                className="w-4 h-4"
+              />
+              <span className="text-slate-300">Individual (only for me)</span>
             </label>
           </div>
         </div>
