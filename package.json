@@ -1,6 +1,7 @@
 {
   "name": "foodalyzer",
   "version": "0.1.0",
+  "author": "Soulsbros (https://github.com/soulsbros)",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,7 +10,7 @@
     "lint": "eslint"
   },
   "engines": {
-    "node": "^25"
+    "node": "^26"
   },
   "dependencies": {
     "mongoose": "^8.0.0",
