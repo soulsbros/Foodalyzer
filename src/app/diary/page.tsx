@@ -22,6 +22,7 @@ export default function DiaryPage() {
 
   useEffect(() => {
     fetchMeals();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date]);
 
   const fetchMeals = async () => {
@@ -96,7 +97,7 @@ export default function DiaryPage() {
 
   const maxCategoryCalories = Math.max(
     ...caloriesByCategory.map((c) => c.calories),
-    1
+    1,
   );
   const maxMealCalories = Math.max(...caloriesByMeal.map((m) => m.calories), 1);
 

@@ -42,6 +42,7 @@ export default function TablePage() {
 
   useEffect(() => {
     fetchMealsForDate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date]);
 
   const fetchData = async () => {
