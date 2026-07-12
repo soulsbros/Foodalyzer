@@ -10,7 +10,8 @@ RUN yarn --frozen-lockfile
 
 COPY . .
 RUN yarn build
-
+RUN mkdir -p .next/standalone/.next/cache \
+    && chown -R node:node .next/standalone/.next/cache
 
 
 FROM dhi.io/node:26-alpine AS runner
@@ -24,7 +25,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-COPY --from=builder --chown=node /app/.next/standalone ./
-COPY --from=builder --chown=node /app/.next/static ./.next/static
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 
 CMD ["node", "server.js"]
