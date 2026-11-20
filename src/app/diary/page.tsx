@@ -20,11 +20,6 @@ export default function DiaryPage() {
   const [meals, setMeals] = useState<Meal[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchMeals();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [date]);
-
   const fetchMeals = async () => {
     try {
       setLoading(true);
@@ -36,6 +31,11 @@ export default function DiaryPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchMeals();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [date]);
 
   const calculateCaloriesByCategory = (): CalorieBreakdown[] => {
     const breakdown: { [key: string]: number } = {};

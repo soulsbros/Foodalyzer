@@ -43,10 +43,6 @@ export default function PantryPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState(defaultState);
 
-  useEffect(() => {
-    fetchIngredients();
-  }, []);
-
   const fetchIngredients = async () => {
     try {
       setLoading(true);
@@ -58,6 +54,10 @@ export default function PantryPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchIngredients();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -36,15 +36,6 @@ export default function TablePage() {
     { value: "snack", label: "Snack" },
   ];
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    fetchMealsForDate();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [date]);
-
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -65,6 +56,15 @@ export default function TablePage() {
       console.error("Failed to fetch meals:", error);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    fetchMealsForDate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [date]);
 
   const handleAddIngredient = () => {
     setDishEntries([
