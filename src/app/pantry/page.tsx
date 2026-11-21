@@ -56,10 +56,29 @@ export default function PantryPage() {
   };
 
   useEffect(() => {
-    fetchIngredients();
+    let cancelled = false;
+
+    void getIngredients()
+      .then((data) => {
+        if (!cancelled) {
+          setIngredients(data);
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to fetch ingredients:", error);
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
 
     if (!formData.name || !formData.calories || !formData.category) {

@@ -36,18 +36,6 @@ export default function TablePage() {
     { value: "snack", label: "Snack" },
   ];
 
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      const data = await getIngredients();
-      setIngredients(data);
-    } catch (error) {
-      console.error("Failed to fetch ingredients:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const fetchMealsForDate = async () => {
     try {
       const data = await getMealsByDate(date);
@@ -58,12 +46,38 @@ export default function TablePage() {
   };
 
   useEffect(() => {
-    fetchData();
+    let cancelled = false;
+
+    getIngredients()
+      .then((data) => {
+        if (!cancelled) setIngredients(data);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch ingredients:", error);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
-    fetchMealsForDate();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    let cancelled = false;
+
+    getMealsByDate(date)
+      .then((data) => {
+        if (!cancelled) setMeals(data);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch meals:", error);
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [date]);
 
   const handleAddIngredient = () => {

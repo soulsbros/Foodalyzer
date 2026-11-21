@@ -20,21 +20,27 @@ export default function DiaryPage() {
   const [meals, setMeals] = useState<Meal[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchMeals = async () => {
-    try {
-      setLoading(true);
-      const data = await getMealsByDate(date);
-      setMeals(data);
-    } catch (error) {
-      console.error("Failed to fetch meals:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchMeals();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    let cancelled = false;
+
+    void Promise.resolve()
+      .then(() => {
+        if (!cancelled) setLoading(true);
+        return getMealsByDate(date);
+      })
+      .then((data) => {
+        if (!cancelled) setMeals(data);
+      })
+      .catch((error) => {
+        if (!cancelled) console.error("Failed to fetch meals:", error);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [date]);
 
   const calculateCaloriesByCategory = (): CalorieBreakdown[] => {
